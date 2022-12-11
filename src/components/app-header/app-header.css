@@ -1,0 +1,11 @@
+.header__tittle {
+    position: absolute;
+    top: -75px;
+    width: 100%;
+    font-size: 80px;
+    font-weight: 200;
+    text-align: center;
+    color: rgba(175, 47, 47, 0.15);
+    text-rendering: optimizeLegibility;
+}
+
