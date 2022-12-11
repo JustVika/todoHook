@@ -113,7 +113,7 @@ class App extends React.Component {
   render() {
     const { todoData, filter } = this.state
     const doneCount = todoData.filter((elem) => !elem.done).length
-    const visibleTasks = this.filterTasks()
+    const visibleTasks = this.filterTasks ()
     return (
       <section className="todo-app">
         <AppHeader addItem={this.addItem} />
