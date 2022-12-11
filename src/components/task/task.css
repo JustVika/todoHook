@@ -57,6 +57,10 @@
   color: #cc9a9a;
   cursor: pointer;
   margin-right: 10px;
+  transition: 0.3s;
+}
+.task__btn:hover{
+  transform: scale(1.15);
 }
 .btn-edit::before {
   content: "✎";
