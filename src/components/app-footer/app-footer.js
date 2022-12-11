@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import './app-footer.css'
 
 export default class AppFooter extends React.Component {
@@ -37,4 +38,17 @@ export default class AppFooter extends React.Component {
       </footer>
     )
   }
+}
+
+AppFooter.defaultProps = {
+  doneCount: 0,
+  onFilterChange: () => {},
+  filter: 'all',
+  allDeleted: () => {},
+}
+AppFooter.propTypes = {
+  doneCount: PropTypes.number,
+  onFilterChange: PropTypes.func,
+  filter: PropTypes.string,
+  allDeleted: PropTypes.func,
 }

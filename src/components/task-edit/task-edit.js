@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import './task-edit.css'
 
 export default class TaskEdit extends React.Component {
@@ -33,4 +34,12 @@ export default class TaskEdit extends React.Component {
       </li>
     )
   }
+}
+
+TaskEdit.defaultProps = {
+  onEditing: () => {},
+}
+
+TaskEdit.propTypes = {
+  onEditing: PropTypes.func,
 }

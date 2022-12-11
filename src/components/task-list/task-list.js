@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types'
+
 import Task from '../task/task'
 import TaskEdit from '../task-edit/task-edit'
 import './task-list.css'
@@ -19,5 +21,18 @@ function TaskList({ todoData, onDeleted, onEditing, onToggleDone }) {
   })
 
   return <ul className="task-list">{tasks}</ul>
+}
+
+TaskList.defaultProps = {
+  onDeleted: () => {},
+  onEditing: () => {},
+  onToggleDone: () => {},
+  todoData: [],
+}
+TaskList.propTypes = {
+  onDeleted: PropTypes.func,
+  onEditing: PropTypes.func,
+  onToggleDone: PropTypes.func,
+  todoData: PropTypes.arrayOf(PropTypes.objectOf),
 }
 export default TaskList
