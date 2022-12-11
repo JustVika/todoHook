@@ -43,7 +43,7 @@ export default class Task extends React.Component {
         <label htmlFor={`task${id}`} className={classNames}>
           <input id={`task${id}`} className="task__input" type="checkbox" checked={done} onChange={onToggleDone} />
           <span className="task__check-box" />
-          {label}
+          <span className="ji">{label}</span>
         </label>
         <div className="task__wrapper">
           <div className="task__create-date"> {`created ${date} ago`}</div>
