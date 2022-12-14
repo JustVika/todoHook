@@ -10,28 +10,31 @@ export default class TaskEdit extends React.Component {
     }
   }
 
-  handleChange = (key, funcEdit) => {
-    this.setState({
-      label: key.target.value,
-    })
+  onSubmit = (event) => {
+    event.preventDefault()
     const { label } = this.state
-    if (key.keyCode === 13) {
-      funcEdit(label)
-    }
+    const { onEditing } = this.props
+    if (!label.trimStart()) return
+    onEditing(label)
+    this.setState({
+      label: '',
+    })
+  }
+
+  onLabelChange = (event) => {
+    this.setState({
+      label: event.target.value,
+    })
   }
 
   render() {
-    const { onEditing } = this.props
     const { label } = this.state
     return (
-      <li className="task-list__item task-edit">
-        <input
-          className="task-edit__input"
-          type="text"
-          defaultValue={label}
-          onKeyUp={(event) => this.handleChange(event, onEditing)}
-        />
-      </li>
+      <div className=" task-edit">
+        <form onSubmit={this.onSubmit} className="task-edit__form">
+          <input className="task-edit__input" type="text" value={label} onChange={this.onLabelChange} />
+        </form>
+      </div>
     )
   }
 }

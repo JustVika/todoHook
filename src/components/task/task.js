@@ -39,11 +39,11 @@ export default class Task extends React.Component {
     }
     this.timer()
     return (
-      <li className="task-list__item task">
+      <div className="task">
         <label htmlFor={`task${id}`} className={classNames}>
           <input id={`task${id}`} className="task__input" type="checkbox" checked={done} onChange={onToggleDone} />
           <span className="task__check-box" />
-          <span className="ji">{label}</span>
+          <span>{label}</span>
         </label>
         <div className="task__wrapper">
           <div className="task__create-date"> {`created ${date} ago`}</div>
@@ -55,7 +55,7 @@ export default class Task extends React.Component {
           />
           <button type="button" aria-label="Task Delete" className="task__btn btn-destroy" onClick={onDeleted} />
         </div>
-      </li>
+      </div>
     )
   }
 }

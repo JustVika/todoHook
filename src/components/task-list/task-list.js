@@ -8,16 +8,21 @@ function TaskList({ todoData, onDeleted, onEditing, onToggleDone }) {
   const tasks = todoData.map((item) => {
     if (!item.edit) {
       return (
-        <Task
-          key={item.id}
-          task={item}
-          onDeleted={() => onDeleted(item.id)}
-          onEditing={(label) => onEditing(item.id, label)}
-          onToggleDone={() => onToggleDone(item.id)}
-        />
+        <li key={item.id} className="task-list__item">
+          <Task
+            task={item}
+            onDeleted={() => onDeleted(item.id)}
+            onEditing={(label) => onEditing(item.id, label)}
+            onToggleDone={() => onToggleDone(item.id)}
+          />
+        </li>
       )
     }
-    return <TaskEdit key={item.id} task={item} onEditing={(label) => onEditing(item.id, label)} />
+    return (
+      <li key={item.id} className="task-list__item">
+        <TaskEdit key={item.id} task={item} onEditing={(label) => onEditing(item.id, label)} />
+      </li>
+    )
   })
 
   return <ul className="task-list">{tasks}</ul>

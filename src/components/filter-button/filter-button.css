@@ -1,0 +1,25 @@
+.filter__input {
+  appearance: none;
+}
+.filter__group{
+    display: flex;
+}
+.filter__label {
+  margin-left: 10px;
+  padding: 5px;
+  border: 1px solid transparent;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+.filter__input:checked + .filter__label {
+  border: 1px solid #808080;
+}
+
+.filter__label:hover {
+  border: 1px solid #f6f6f6;
+  background-color: #f6f6f6;
+}
+.filter__input:checked + .filter__label:hover {
+  border: 1px solid #808080;
+  background-color: inherit;
+}

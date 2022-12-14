@@ -1,54 +1,31 @@
-import React from 'react'
 import PropTypes from 'prop-types'
+
+import FilterButton from '../filter-button/filter-button'
 import './app-footer.css'
 
-export default class AppFooter extends React.Component {
-  constructor(props) {
-    super(props)
-    this.buttons = [
-      { name: 'all', label: 'All' },
-      { name: 'active', label: 'Active' },
-      { name: 'completed', label: 'Completed' },
-    ]
-  }
+export default function AppFooter(props) {
+  const { doneCount, onFilterChange, allDeleted, filter } = props
 
-  render() {
-    const { doneCount, filter, onFilterChange, allDeleted } = this.props
-    const buttonsGroup = this.buttons.map(({ name, label }) => {
-      const active = filter === name
-      const btnClass = active ? ' buttons-filter__btn--active' : ''
-      return (
-        <button
-          className={`buttons-filter__btn${btnClass}`}
-          onClick={() => onFilterChange(name)}
-          key={name}
-          type="submit"
-        >
-          {label}
-        </button>
-      )
-    })
-    return (
-      <footer className="footer-app">
-        <span className="footer-app__left-task">{`${doneCount} items left`}</span>
-        <div className="buttons-filter">{buttonsGroup}</div>
-        <button type="button" className="btn-clear" onClick={allDeleted}>
-          Clear completed
-        </button>
-      </footer>
-    )
-  }
+  return (
+    <footer className="footer-app">
+      <span className="footer-app__left-task">{`${doneCount} items left`}</span>
+
+      <FilterButton filterChange={onFilterChange} filter={filter} />
+
+      <button type="button" className="btn-clear" onClick={allDeleted}>
+        Clear completed
+      </button>
+    </footer>
+  )
 }
 
 AppFooter.defaultProps = {
   doneCount: 0,
   onFilterChange: () => {},
-  filter: 'all',
   allDeleted: () => {},
 }
 AppFooter.propTypes = {
   doneCount: PropTypes.number,
   onFilterChange: PropTypes.func,
-  filter: PropTypes.string,
   allDeleted: PropTypes.func,
 }
