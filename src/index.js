@@ -34,8 +34,8 @@ class App extends React.Component {
   }
 
   allDeleted = () => {
-    this.setState({
-      todoData: [],
+    this.setState(({ todoData }) => {
+      return { todoData: todoData.filter((item) => !item.done) }
     })
   }
 
