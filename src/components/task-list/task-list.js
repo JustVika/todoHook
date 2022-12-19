@@ -12,7 +12,7 @@ function TaskList({ todoData, onDeleted, onEditing, onToggleDone }) {
           <Task
             task={item}
             onDeleted={() => onDeleted(item.id)}
-            onEditing={(label) => onEditing(item.id, label)}
+            onEditing={({ label, min, sec }) => onEditing(item.id, label, min, sec)}
             onToggleDone={() => onToggleDone(item.id)}
           />
         </li>

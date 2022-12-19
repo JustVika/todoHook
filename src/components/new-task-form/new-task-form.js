@@ -6,37 +6,59 @@ import './new-task-form.css'
 export default class NewTaskForm extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { label: '' }
+    this.state = { label: '', sec: '', min: '' }
   }
 
-  onLabelChange = (event) => {
+  onInputChange = (event) => {
     this.setState({
-      label: event.target.value,
+      [event.target.name]: event.target.value,
     })
   }
 
   onSubmit = (event) => {
     event.preventDefault()
-    const { label } = this.state
+    const { label, sec, min } = this.state
     const { addItem } = this.props
+    const isNumberSec = Number(sec) ? Number(sec) : '00'
+    const isNumberMin = Number(min) ? Number(min) : 1
     if (!label.trimStart()) return
-    addItem(label)
+    addItem(label, isNumberMin, isNumberSec < 10 ? `0${isNumberSec}` : isNumberSec)
     this.setState({
       label: '',
+      sec: '',
+      min: '',
     })
   }
 
   render() {
-    const { label } = this.state
+    const { label, sec, min } = this.state
     return (
       <form className="task-form" onSubmit={this.onSubmit}>
         <input
+          name="label"
           type="text"
           className="task-form__input"
           placeholder="What needs to be done?"
-          onChange={this.onLabelChange}
+          onChange={this.onInputChange}
           value={label}
         />
+        <input
+          type="text"
+          className="task-form__input-time"
+          placeholder="Min"
+          name="min"
+          value={min}
+          onChange={this.onInputChange}
+        />
+        <input
+          type="text"
+          className="task-form__input-time"
+          name="sec"
+          placeholder="Sec"
+          value={sec}
+          onChange={this.onInputChange}
+        />
+        <input type="submit" hidden />
       </form>
     )
   }

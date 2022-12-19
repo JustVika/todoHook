@@ -16,13 +16,15 @@ class App extends React.Component {
     }
   }
 
-  createTodoItem = (textLabel) => {
+  createTodoItem = (textLabel, min = 1, sec = '00') => {
     return {
       id: this.maxId++,
       label: textLabel,
       done: false,
       edit: false,
       date: new Date(),
+      min,
+      sec,
     }
   }
 
@@ -59,22 +61,24 @@ class App extends React.Component {
     return true
   }
 
-  editTask = (id, label) => {
+  editTask = (id, label, min, sec) => {
     const { todoData: arr } = this.state
     const { oldItem, idx } = this.findTask(arr, id)
     if (!oldItem.edit) {
       this.closeOpenEditTask(arr)
     }
     this.setState(({ todoData }) => {
-      const newItem = oldItem.edit ? { ...oldItem, edit: !oldItem.edit, label } : { ...oldItem, edit: !oldItem.edit }
+      const newItem = oldItem.edit
+        ? { ...oldItem, edit: !oldItem.edit, label }
+        : { ...oldItem, edit: !oldItem.edit, min, sec }
       return {
         todoData: [...todoData.slice(0, idx), newItem, ...todoData.slice(idx + 1)],
       }
     })
   }
 
-  addItem = (textLabel) => {
-    const newTask = this.createTodoItem(textLabel)
+  addItem = (textLabel, min, sec) => {
+    const newTask = this.createTodoItem(textLabel, min, sec)
 
     this.setState(({ todoData }) => {
       return { todoData: [...todoData, newTask] }

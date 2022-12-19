@@ -37,9 +37,7 @@
   font-weight: 400;
   color: #4d4d4d;
 }
-.ji {
-  max-width: 270px;
-}
+
 .task__label--done {
   text-decoration: line-through;
   color: #cdcdcd;
@@ -48,8 +46,24 @@
 .task__wrapper {
   display: flex;
   align-items: center;
+  width: 55%;
+  justify-content: space-between;
 }
-
+.task__timer-start::before {
+  content: '▶';
+  color: #cc9a9a;
+  font-size: 27px;
+  display: flex;
+}
+.task__timer-pause::before {
+  content: '⏸';
+  font-size: 17px;
+  display: flex;
+}
+.task__timer {
+  font-size: 13px;
+  color: grey;
+}
 .task__create-date {
   font-size: 13px;
   color: #808080;

@@ -32,6 +32,8 @@
     "quotes": ["error", "single"],
     "semi": ["error", "never"],
     "no-plusplus": "off",
+    "react/no-unused-state": "off",
+    "no-unused-expressions": "off",
     "class-methods-use-this": "off",
     "react/react-in-jsx-scope": "off",
     "react/prop-types": 0,
