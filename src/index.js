@@ -16,7 +16,7 @@ class App extends React.Component {
     }
   }
 
-  createTodoItem = (textLabel, min = 1, sec = '06') => ({
+  createTodoItem = (textLabel, min = 3, sec = '30') => ({
     id: this.maxId++,
     label: textLabel,
     done: false,

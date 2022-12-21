@@ -19,8 +19,9 @@ export default class NewTaskForm extends React.Component {
     event.preventDefault()
     const { label, sec, min } = this.state
     const { addItem } = this.props
+
     let isNumberSec = Number(sec) ? Number(sec) : '00'
-    const isNumberMin = Number(min) ? Number(min) : 1
+    const isNumberMin = Number(min) ? Number(min) : 0
     isNumberSec = isNumberSec > 59 ? 59 : isNumberSec
     if (!label.trimStart()) return
     addItem(label, isNumberMin, isNumberSec < 10 ? `0${isNumberSec}` : isNumberSec)
