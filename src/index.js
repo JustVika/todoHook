@@ -16,17 +16,17 @@ class App extends React.Component {
     }
   }
 
-  createTodoItem = (textLabel, min = 1, sec = '00') => {
-    return {
-      id: this.maxId++,
-      label: textLabel,
-      done: false,
-      edit: false,
-      date: new Date(),
-      min,
-      sec,
-    }
-  }
+  createTodoItem = (textLabel, min = 1, sec = '06') => ({
+    id: this.maxId++,
+    label: textLabel,
+    done: false,
+    edit: false,
+    date: new Date(),
+    min,
+    sec,
+    dateStart: '',
+    isCounting: false,
+  })
 
   deletedTask = (id) => {
     this.setState(({ todoData }) => {
@@ -36,9 +36,7 @@ class App extends React.Component {
   }
 
   allDeleted = () => {
-    this.setState(({ todoData }) => {
-      return { todoData: todoData.filter((item) => !item.done) }
-    })
+    this.setState(({ todoData }) => ({ todoData: todoData.filter((item) => !item.done) }))
   }
 
   findTask = (arr, id) => {
@@ -70,7 +68,13 @@ class App extends React.Component {
     this.setState(({ todoData }) => {
       const newItem = oldItem.edit
         ? { ...oldItem, edit: !oldItem.edit, label }
-        : { ...oldItem, edit: !oldItem.edit, min, sec }
+        : {
+            ...oldItem,
+            edit: !oldItem.edit,
+            min,
+            sec,
+            dateStart: new Date(),
+          }
       return {
         todoData: [...todoData.slice(0, idx), newItem, ...todoData.slice(idx + 1)],
       }
@@ -80,9 +84,7 @@ class App extends React.Component {
   addItem = (textLabel, min, sec) => {
     const newTask = this.createTodoItem(textLabel, min, sec)
 
-    this.setState(({ todoData }) => {
-      return { todoData: [...todoData, newTask] }
-    })
+    this.setState(({ todoData }) => ({ todoData: [...todoData, newTask] }))
   }
 
   onToggleDone = (id) => {
@@ -114,6 +116,26 @@ class App extends React.Component {
     })
   }
 
+  onChangeStartTimer = (id, min, sec, isCounting, dateStart) => {
+    const { todoData: arr } = this.state
+    const { oldItem, idx } = this.findTask(arr, id)
+    let newDate = dateStart
+    if (isCounting && !dateStart) {
+      newDate = new Date()
+    }
+    if (!isCounting) {
+      newDate = ''
+    }
+    const newItem = {
+      ...oldItem,
+      dateStart: newDate,
+      min,
+      sec,
+      isCounting,
+    }
+    this.setState(({ todoData }) => ({ todoData: [...todoData.slice(0, idx), newItem, ...todoData.slice(idx + 1)] }))
+  }
+
   render() {
     const { todoData, filter } = this.state
     const doneCount = todoData.filter((elem) => !elem.done).length
@@ -127,6 +149,7 @@ class App extends React.Component {
             onDeleted={this.deletedTask}
             onEditing={this.editTask}
             onToggleDone={this.onToggleDone}
+            onChangeStartTimer={this.onChangeStartTimer}
           />
         </div>
         <AppFooter

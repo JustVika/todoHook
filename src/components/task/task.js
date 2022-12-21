@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import formatDistanceToNowStrict from 'date-fns/formatDistanceToNowStrict'
 import './task.css'
+import formatDistanceStrict from 'date-fns/formatDistanceStrict'
 
 export default class Task extends React.Component {
   constructor(props) {
@@ -10,17 +11,37 @@ export default class Task extends React.Component {
       date: formatDistanceToNowStrict(props.task.date),
       min: props.task.min,
       sec: props.task.sec,
-      isCounting: false,
+      isCounting: props.task.isCounting,
     }
     this.counterID = 1
+    this.onChangeStartTimer = props.onChangeStartTimer
   }
 
   componentDidMount() {
     this.timer()
-  }
+    const {
+      task: { sec, min },
+    } = this.props
+    const {
+      task: { dateStart, isCounting },
+    } = this.props
 
-  componentDidUpdate() {
-    this.timer()
+    if (isCounting) {
+      const different = dateStart
+        ? parseInt(
+            formatDistanceStrict(new Date(), dateStart, {
+              unit: 'second',
+            }),
+            10
+          )
+        : 0
+      const allSec = min * 60 + Number(sec) - different
+      const newSec = allSec % 60
+      allSec > 0
+        ? this.setState({ min: Math.trunc(allSec / 60), sec: newSec > 10 ? newSec : `0${newSec - 1}` })
+        : this.timerCountDownPause()
+      this.timerCountDownStart()
+    }
   }
 
   componentWillUnmount() {
@@ -28,27 +49,45 @@ export default class Task extends React.Component {
   }
 
   timerCountDownStart = () => {
+    this.timer()
     const { min, sec } = this.state
+    const {
+      task: { dateStart, id },
+    } = this.props
+
     if (!min && !sec) return
     this.setState({ isCounting: true })
+
+    this.onChangeStartTimer(id, min, sec, true, dateStart)
+
     this.counterID = setInterval(() => {
       this.changeSec()
     }, 1000)
   }
 
   timerCountDownPause = () => {
+    this.timer()
+    const { min, sec } = this.state
+    const {
+      task: { id },
+    } = this.props
     this.setState({ isCounting: false })
+    this.onChangeStartTimer(id, min, sec, false)
     clearInterval(this.counterID)
   }
 
   changeSec = () => {
-    const { sec } = this.state
-    sec > 0 ? this.setState({ sec: sec > 9 ? sec - 1 : `0${sec - 1}` }) : this.changeMin()
+    const { sec: second } = this.state
+    if (second > 0) {
+      this.setState(({ sec }) => ({ sec: sec > 10 ? sec - 1 : `0${sec - 1}` }))
+    } else {
+      this.changeMin()
+    }
   }
 
   changeMin = () => {
-    const { min } = this.state
-    min > 0 ? this.setState({ min: min - 1, sec: 59 }) : clearInterval(this.counterID)
+    const { min: minute } = this.state
+    minute > 0 ? this.setState(({ min }) => ({ min: min - 1, sec: 59 })) : this.timerCountDownPause()
   }
 
   timer = () => {
@@ -61,7 +100,7 @@ export default class Task extends React.Component {
         this.setState({
           date: formatDistanceToNowStrict(date),
         }),
-      10000
+      1000
     )
   }
 

@@ -31,6 +31,7 @@ export default function FilterButton(props) {
   })
   return <div className="filter__group"> {buttonsGroup}</div>
 }
+
 FilterButton.defaultProps = {
   filterChange: () => {},
   filter: '',

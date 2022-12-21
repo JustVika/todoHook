@@ -4,7 +4,7 @@ import Task from '../task/task'
 import TaskEdit from '../task-edit/task-edit'
 import './task-list.css'
 
-function TaskList({ todoData, onDeleted, onEditing, onToggleDone }) {
+function TaskList({ todoData, onDeleted, onEditing, onToggleDone, onChangeStartTimer }) {
   const tasks = todoData.map((item) => {
     if (!item.edit) {
       return (
@@ -14,6 +14,7 @@ function TaskList({ todoData, onDeleted, onEditing, onToggleDone }) {
             onDeleted={() => onDeleted(item.id)}
             onEditing={({ label, min, sec }) => onEditing(item.id, label, min, sec)}
             onToggleDone={() => onToggleDone(item.id)}
+            onChangeStartTimer={onChangeStartTimer}
           />
         </li>
       )
