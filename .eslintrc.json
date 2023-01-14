@@ -35,6 +35,7 @@
     "no-plusplus": "off",
     "react/prop-types": "off",
     "class-methods-use-this": "off",
+    "jsx-a11y/control-has-associated-label": "off",
     "react/react-in-jsx-scope": "off",
     "import/no-unresolved": [2, { "caseSensitive": false }],
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],

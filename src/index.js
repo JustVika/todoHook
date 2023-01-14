@@ -1,4 +1,4 @@
-import React from 'react'
+import { useState } from 'react'
 import ReactDOM from 'react-dom/client'
 
 import AppFooter from './components/app-footer/app-footer'
@@ -6,18 +6,10 @@ import AppHeader from './components/app-header/app-header'
 import TaskList from './components/task-list/task-list'
 import './index.css'
 
-class App extends React.Component {
-  constructor(props) {
-    super(props)
-    this.maxId = 100
-    this.state = {
-      todoData: [this.createTodoItem('coffe'), this.createTodoItem('sleep'), this.createTodoItem('job')],
-      filter: 'all',
-    }
-  }
-
-  createTodoItem = (textLabel, min = 3, sec = '30') => ({
-    id: this.maxId++,
+function App() {
+  let maxId = 100
+  const createTodoItem = (textLabel, min = 1, sec = '05') => ({
+    id: maxId++,
     label: textLabel,
     done: false,
     edit: false,
@@ -27,77 +19,65 @@ class App extends React.Component {
     dateStart: '',
     isCounting: false,
   })
+  const [todoData, setTodoDate] = useState([createTodoItem('coffe'), createTodoItem('sleep'), createTodoItem('job')])
+  const [filter, setFilter] = useState('all')
 
-  deletedTask = (id) => {
-    this.setState(({ todoData }) => {
-      const idx = todoData.findIndex((elem) => elem.id === id)
-      return { todoData: [...todoData.slice(0, idx), ...todoData.slice(idx + 1)] }
-    })
+  const deletedTask = (id) => {
+    const idx = todoData.findIndex((elem) => elem.id === id)
+    setTodoDate((todo) => [...todo.slice(0, idx), ...todo.slice(idx + 1)])
   }
 
-  allDeleted = () => {
-    this.setState(({ todoData }) => ({ todoData: todoData.filter((item) => !item.done) }))
+  const allDeleted = () => {
+    setTodoDate((todo) => todo.filter((item) => !item.done))
   }
 
-  findTask = (arr, id) => {
+  const findTask = (arr, id) => {
     const idx = arr.findIndex((elem) => elem.id === id)
     return { oldItem: arr[idx], idx }
   }
 
-  closeOpenEditTask = (arr) => {
+  const closeOpenEditTask = (arr) => {
     const openEditTask = arr.filter((item) => item.edit)
     if (!openEditTask[0]) {
       return false
     }
-    this.setState(({ todoData }) => {
-      const { oldItem, idx } = this.findTask(todoData, openEditTask[0].id)
-      const newItem = { ...oldItem, edit: !oldItem.edit }
-      return {
-        todoData: [...todoData.slice(0, idx), newItem, ...todoData.slice(idx + 1)],
-      }
-    })
+    const { oldItem, idx } = findTask(todoData, openEditTask[0].id)
+    const newItem = { ...oldItem, edit: !oldItem.edit }
+    setTodoDate((todo) => [...todo.slice(0, idx), newItem, ...todo.slice(idx + 1)])
     return true
   }
 
-  editTask = (id, label, min, sec) => {
-    const { todoData: arr } = this.state
-    const { oldItem, idx } = this.findTask(arr, id)
+  const editTask = (id, label, min, sec) => {
+    const { oldItem, idx } = findTask(todoData, id)
     if (!oldItem.edit) {
-      this.closeOpenEditTask(arr)
+      closeOpenEditTask(todoData)
     }
-    this.setState(({ todoData }) => {
-      const newItem = oldItem.edit
-        ? { ...oldItem, edit: !oldItem.edit, label }
-        : {
-            ...oldItem,
-            edit: !oldItem.edit,
-            min,
-            sec,
-            dateStart: new Date(),
-          }
-      return {
-        todoData: [...todoData.slice(0, idx), newItem, ...todoData.slice(idx + 1)],
-      }
-    })
+    const newItem = oldItem.edit
+      ? { ...oldItem, edit: !oldItem.edit, label }
+      : {
+          ...oldItem,
+          edit: !oldItem.edit,
+          min,
+          sec,
+          dateStart: new Date(),
+        }
+    setTodoDate((todo) => [...todo.slice(0, idx), newItem, ...todo.slice(idx + 1)])
   }
 
-  addItem = (textLabel, min, sec) => {
-    const newTask = this.createTodoItem(textLabel, min, sec)
+  const addItem = (textLabel, min, sec) => {
+    const newTask = createTodoItem(textLabel, min, sec)
 
-    this.setState(({ todoData }) => ({ todoData: [...todoData, newTask] }))
+    setTodoDate((todo) => [...todo, newTask])
   }
 
-  onToggleDone = (id) => {
-    this.setState(({ todoData }) => {
-      const idx = todoData.findIndex((elem) => elem.id === id)
-      const oldItem = todoData[idx]
-      const newItem = { ...oldItem, done: !oldItem.done }
-      return { todoData: [...todoData.slice(0, idx), newItem, ...todoData.slice(idx + 1)] }
-    })
+  const onToggleDone = (id) => {
+    const idx = todoData.findIndex((elem) => elem.id === id)
+    const oldItem = todoData[idx]
+    const newItem = { ...oldItem, done: !oldItem.done }
+    setTodoDate((todo) => [...todo.slice(0, idx), newItem, ...todo.slice(idx + 1)])
   }
 
-  filterTasks = () => {
-    const { todoData, filter } = this.state
+  const filterTasks = () => {
     switch (filter) {
       case 'all':
         return todoData
@@ -110,15 +90,12 @@ class App extends React.Component {
     }
   }
 
-  onFilterChange = (filter) => {
-    this.setState({
-      filter,
-    })
+  const onFilterChange = (filters) => {
+    setFilter(filters)
   }
 
-  onChangeStartTimer = (id, min, sec, isCounting, dateStart) => {
-    const { todoData: arr } = this.state
-    const { oldItem, idx } = this.findTask(arr, id)
+  const onChangeStartTimer = (id, min, sec, isCounting, dateStart) => {
+    const { oldItem, idx } = findTask(todoData, id)
     let newDate = dateStart
     if (isCounting && !dateStart) {
       newDate = new Date()
@@ -133,34 +110,26 @@ class App extends React.Component {
       sec,
       isCounting,
     }
-    this.setState(({ todoData }) => ({ todoData: [...todoData.slice(0, idx), newItem, ...todoData.slice(idx + 1)] }))
+    setTodoDate((todo) => [...todo.slice(0, idx), newItem, ...todo.slice(idx + 1)])
   }
 
-  render() {
-    const { todoData, filter } = this.state
-    const doneCount = todoData.filter((elem) => !elem.done).length
-    const visibleTasks = this.filterTasks()
-    return (
-      <section className="todo-app">
-        <AppHeader addItem={this.addItem} />
-        <div className="main">
-          <TaskList
-            todoData={visibleTasks}
-            onDeleted={this.deletedTask}
-            onEditing={this.editTask}
-            onToggleDone={this.onToggleDone}
-            onChangeStartTimer={this.onChangeStartTimer}
-          />
-        </div>
-        <AppFooter
-          doneCount={doneCount}
-          onFilterChange={this.onFilterChange}
-          filter={filter}
-          allDeleted={this.allDeleted}
+  const doneCount = todoData.filter((elem) => !elem.done).length
+  const visibleTasks = filterTasks()
+  return (
+    <section className="todo-app">
+      <AppHeader addItem={addItem} />
+      <div className="main">
+        <TaskList
+          todoData={visibleTasks}
+          onDeleted={deletedTask}
+          onEditing={editTask}
+          onToggleDone={onToggleDone}
+          onChangeStartTimer={onChangeStartTimer}
         />
-      </section>
-    )
-  }
+      </div>
+      <AppFooter doneCount={doneCount} onFilterChange={onFilterChange} filter={filter} allDeleted={allDeleted} />
+    </section>
+  )
 }
 
 const root = ReactDOM.createRoot(document.getElementById('root'))

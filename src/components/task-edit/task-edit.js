@@ -1,44 +1,34 @@
-import React from 'react'
+import { useState } from 'react'
 import PropTypes from 'prop-types'
 import './task-edit.css'
 
-export default class TaskEdit extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      label: props.task.label,
-    }
-  }
-
-  onSubmit = (event) => {
+function TaskEdit(props) {
+  const {
+    task: { label: name },
+  } = props
+  const [label, setLabel] = useState(name)
+  const onSubmit = (event) => {
     event.preventDefault()
-    const { label } = this.state
-    const { onEditing } = this.props
+    const { onEditing } = props
     if (!label.trimStart()) return
     onEditing(label)
-    this.setState({
-      label: '',
-    })
+    setLabel('')
   }
 
-  onLabelChange = (event) => {
-    this.setState({
-      label: event.target.value,
-    })
+  const onLabelChange = (event) => {
+    setLabel(event.target.value)
   }
 
-  render() {
-    const { label } = this.state
-    return (
-      <div className=" task-edit">
-        <form onSubmit={this.onSubmit} className="task-edit__form">
-          <input className="task-edit__input" type="text" value={label} onChange={this.onLabelChange} />
-        </form>
-      </div>
-    )
-  }
+  return (
+    <div className=" task-edit">
+      <form onSubmit={onSubmit} className="task-edit__form">
+        <input className="task-edit__input" type="text" value={label} onChange={onLabelChange} />
+      </form>
+    </div>
+  )
 }
 
+export default TaskEdit
 TaskEdit.defaultProps = {
   onEditing: () => {},
 }
